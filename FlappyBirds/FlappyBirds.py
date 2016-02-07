@@ -27,19 +27,15 @@ points = 0
 #COLORS
 white = (255,255,255)
 black = (0,0,0)
-
-
 red = (200,0,0)
 light_red = (255,0,0)
-
 yellow = (200,200,0)
 light_yellow = (255,255,0)
-
 green = (34,177,76)
 light_green = (0,255,0)
-
 blue = (0,0,255)
-
+#CONSTANTS
+high = 0
 #FRAMES
 FPS = 30                                                  #FRAME-PER-SECOND
 clock = pygame.time.Clock()
@@ -97,6 +93,7 @@ def pause():
     :We are initiating the pause menu whenever KEY P is called during game this menu will be initiated:
     """
     paused = True
+    global high
     while paused:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -111,7 +108,8 @@ def pause():
 
         gameDisplay.fill(white)
         message_to_screen("Paused",black,-100,size="large")
-        message_to_screen("Press C to countinue or Q to Quit",blue,-10,size="medium")
+        message_to_screen("HIGH SCORE :" + str(high),black,y_displace=-10,size="small")
+        message_to_screen("Press C to countinue or Q to Quit",blue,-80,size="medium")
         pygame.display.update()
         clock.tick(5)
 
@@ -121,8 +119,14 @@ def scores(score):
     :return: nothing :
     :screen-blit:
     """
-    text = smallfont.render("Score: "+str(score), True, black)
-    gameDisplay.blit(text, [0,0])
+    global high
+    if score > high:
+        high=score
+    else:
+        pass
+    score = smallfont.render("Score: "+str(score), True, black)
+    gameDisplay.blit(score, [0,0])
+
 
 def game_intro():
     """
@@ -192,8 +196,8 @@ def gameLoop():
     gameExit = False
     gameOver = False
     gap = 300
-    gap_min = 100
-    gap_max = 300
+    gap_min = 70                                                           ##MIN-DIFFICULTY
+    gap_max = 250                                                          ##MAX-DIFFICULTY
     points = 0
     x_moving = display_x
     length_y = 300
@@ -207,7 +211,9 @@ def gameLoop():
 
         while gameOver:
             gameDisplay.fill(white)
-            message_to_screen("Game over",red,y_displace=-50,size="large")
+            global high
+            message_to_screen("Game over",red,y_displace=-80,size="large")
+            message_to_screen("HIGH SCORE :" + str(high),black,y_displace=-10,size="small")
 
             button("PLAY", 200,450,100,50, green, light_green, action="play")
             button("QUIT", 450,450,100,50, red, light_red, action ="quit")
